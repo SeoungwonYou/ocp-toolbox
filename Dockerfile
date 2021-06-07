@@ -1,11 +1,11 @@
 FROM centos:centos7
 
-EXPOSE 8080
-
 COPY index.html /var/run/web/index.html
 
 RUN yum install -y epel-release
 RUN yum install -y  wget curl net-tools java-1.8.0-openjdk telnet bind-utils lsof jq
+
+RUN yum install -y traceroute
 
 # ADD files/3.11/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz /tmp
 RUN mkdir /tmp/ocp3.11 && \
@@ -21,6 +21,8 @@ RUN mkdir /tmp/ocp4 && \
 RUN echo "ln -s /tmp/ocp3.11/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit/oc /usr/local/bin/oc" > /tmp/README.txt && \
 	echo "ln -s /tmp/ocp4/oc /usr/local/bin/oc"  >> /tmp/README.txt && \
    ln -s /tmp/ocp3.11/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit/oc /usr/local/bin/oc
+
+EXPOSE 8000-9000
 
 USER 0
 
