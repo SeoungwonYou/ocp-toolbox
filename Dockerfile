@@ -5,7 +5,7 @@ COPY index.html /var/run/web/index.html
 RUN yum install -y epel-release
 RUN yum install -y  wget curl net-tools java-1.8.0-openjdk telnet bind-utils lsof jq
 
-RUN yum install -y traceroute
+RUN yum install -y traceroute openssh-server openssh-clients
 
 # ADD files/3.11/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz /tmp
 RUN mkdir /tmp/ocp3.11 && \
@@ -20,7 +20,12 @@ RUN mkdir /tmp/ocp4 && \
 
 RUN echo "ln -s /tmp/ocp3.11/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit/oc /usr/local/bin/oc" > /tmp/README.txt && \
 	echo "ln -s /tmp/ocp4/oc /usr/local/bin/oc"  >> /tmp/README.txt && \
-   ln -s /tmp/ocp3.11/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit/oc /usr/local/bin/oc
+    ln -s /tmp/ocp4/oc /usr/local/bin/oc
+
+RUN ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key && \
+    ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key
+	
+RUN echo root:root | chpasswd
 
 EXPOSE 8000-9000
 
