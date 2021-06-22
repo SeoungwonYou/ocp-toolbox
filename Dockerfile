@@ -1,6 +1,5 @@
 FROM centos:centos7
 
-COPY index.html /var/run/web/index.html
 
 RUN yum install -y epel-release
 RUN yum install -y  wget curl net-tools java-1.8.0-openjdk telnet bind-utils lsof jq
@@ -23,15 +22,24 @@ RUN echo "ln -s /tmp/ocp3.11/openshift-origin-client-tools-v3.11.0-0cbc58b-linux
     ln -s /tmp/ocp4/oc /usr/local/bin/oc
 
 RUN ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key && \
-    ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key
-	
-RUN echo root:root | chpasswd
+    ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key && \
+	ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key
+
+RUN echo root:root | chpasswd && \
+    mkdir /root/.ssh && \
+	chmod 600 /root/.ssh
+
+RUN mkdir /workspace
+
+COPY index.html /workspace
 
 EXPOSE 8000-9000
 
 USER 0
 
-CMD cd /var/run/web && python -m SimpleHTTPServer 8080
+# /usr/sbin/sshd -D
+WORKDIR /workspace
+CMD  python -m SimpleHTTPServer 8080
 
 #FROM image-registry.openshift-image-registry.svc:5000/openshift/httpd:2.4
 
