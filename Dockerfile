@@ -2,9 +2,11 @@ FROM centos:centos7
 
 
 RUN yum install -y epel-release
-RUN yum install -y  wget curl net-tools java-1.8.0-openjdk telnet bind-utils lsof jq
-
+RUN yum install -y  wget curl net-tools java-1.8.0-openjdk telnet bind-utils lsof jq lsof nc tcpdump git maven
 RUN yum install -y traceroute openssh-server openssh-clients
+
+RUN rm -rf /etc/localtime && ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+RUN git config --global http.sslVerify false
 
 # ADD files/3.11/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz /tmp
 RUN mkdir /tmp/ocp3.11 && \
@@ -33,7 +35,7 @@ RUN mkdir /workspace
 
 COPY index.html /workspace
 
-EXPOSE 8000-9000
+EXPOSE 8000-8100
 
 USER 0
 
