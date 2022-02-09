@@ -1,9 +1,12 @@
-FROM centos:centos7
+FROM quay.io/centos/centos:stream8
 
+#RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-Linux-*
+#RUN sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-*
 
-RUN yum install -y epel-release
-RUN yum install -y  wget curl net-tools java-1.8.0-openjdk telnet bind-utils lsof jq lsof nc tcpdump git maven
-RUN yum install -y traceroute openssh-server openssh-clients
+RUN dnf -y update && dnf clean all
+RUN dnf install -y epel-release
+RUN dnf install -y  python39 wget curl net-tools java-1.8.0-openjdk telnet bind-utils lsof jq lsof nc tcpdump mysql git maven
+RUN dnf install -y traceroute openssh-server openssh-clients
 
 RUN rm -rf /etc/localtime && ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 RUN git config --global http.sslVerify false
@@ -35,13 +38,14 @@ RUN mkdir /workspace
 
 COPY index.html /workspace
 
-EXPOSE 8000-8100
+EXPOSE 5000-5100
 
 USER 0
 
 # /usr/sbin/sshd -D
 WORKDIR /workspace
-CMD  python -m SimpleHTTPServer 8080
+#CMD  python3 -m SimpleHTTPServer 5080
+CMD python3 -m http.server 5000
 
 #FROM image-registry.openshift-image-registry.svc:5000/openshift/httpd:2.4
 
