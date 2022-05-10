@@ -4,9 +4,8 @@ FROM quay.io/centos/centos:stream8
 #RUN sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-*
 
 RUN dnf -y update && dnf clean all
-RUN dnf install -y epel-release
-RUN dnf install -y  python39 wget curl net-tools java-1.8.0-openjdk telnet bind-utils lsof jq lsof nc tcpdump mysql git maven
-RUN dnf install -y traceroute openssh-server openssh-clients
+RUN dnf install -y epel-release && dnf clean all
+RUN dnf install -y  python39 wget curl net-tools java-1.8.0-openjdk telnet bind-utils lsof jq lsof nc tcpdump mysql git maven traceroute openssh-server openssh-clients procps && dnf clean all
 
 RUN rm -rf /etc/localtime && ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 RUN git config --global http.sslVerify false
